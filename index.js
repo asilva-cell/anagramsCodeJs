@@ -1,5 +1,5 @@
 function removeNonAplhaChar(item) {
-	return item.replace(/[^a-z0-9+]+/gi, "");
+	return item.toLowerCase().replace(/[^a-z0-9+]+/g, "");
 }
 
 function sortAlphabetically(str) {
@@ -17,16 +17,11 @@ function addToPotentialAnagrams(anagramsList, sortedStr, item) {
 }
 
 const anagrams = nestedInput => {
-	let posibleAnagrams = {};
-	nestedInput.forEach(item => {
-		let sortedStr = sortAlphabetically(removeNonAplhaChar(item));
-		posibleAnagrams = addToPotentialAnagrams(
-			posibleAnagrams,
-			sortedStr,
-			item
-		);
-	});
-	return Object.values(posibleAnagrams).filter(list => list.length > 1);
+	const possibleAnagrams = nestedInput.reduce((acc, item) => {
+		const sortedStr = sortAlphabetically(removeNonAplhaChar(item));
+		return addToPotentialAnagrams(acc, sortedStr, item);
+	}, {});
+	return Object.values(possibleAnagrams).filter(list => list.length > 1);
 };
 
 if (process.env.NODE_ENV !== "test") {
